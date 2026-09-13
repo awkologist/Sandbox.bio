@@ -71,7 +71,10 @@ Next, we do the same for the other proteome:
 <Execute command={"mv protein.faa ec-h7.fasta"} />
 
 How many proteins are there?
-```grep -c ">" ec*.fasta```
+
+```bash
+grep -c ">" ec*.fasta
+```
 
 
 As of version `2.21.0`, bedtools is able to intersect an "A" file against one or more "B" files. This greatly simplifies analyses involving multiple datasets relevant to a given experiment. For example, let's intersect exons with CpG islands, GWAS SNPs, an the ChromHMM annotations:
