@@ -31,17 +31,17 @@ This project introduces two serotypes of *Escherichia coli*: one pathogenic and 
 
 ## Installation of NCBI Datasets
 First, we install the NCBI tool `datasets` to download data from NCBI. 
-<Execute command="curl -O https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets" />
+<Execute command={"curl -O https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets"} />
 
 Check the content of your working directory:
-<Execute command="ls -l" />
+<Execute command={"ls -l"} />
 
 We must make the code executable:
 
-<Execute command="chmod u+x datasets" />
+<Execute command={"chmod u+x datasets"} />
 
 Check the content of your working directory, again:
-<Execute command="ls -l" />
+<Execute command={"ls -l"} />
 
 What difference do you observe?
 <Quiz
@@ -57,67 +57,67 @@ What difference do you observe?
 
 ## Downloading Proteoms
 let us use a `for` loop in the Bash shell:
-<Execute command="for i in GCF_000005845.2 GCF_000008865.2; do ./datasets download genome accession $i --include protein --filename $i.zip; done" />
+<Execute command={"for i in GCF_000005845.2 GCF_000008865.2; do ./datasets download genome accession $i --include protein --filename $i.zip; done"} />
 
 Now, we extract the compress file archive:
-<Execute command="unzip -jo GCF_000005845.2.zip" />
+<Execute command={"unzip -jo GCF_000005845.2.zip"} />
 
 An then we rename the file:
-<Execute command="mv protein.faa ec-k12.fasta" />
+<Execute command={"mv protein.faa ec-k12.fasta"} />
 
 Next, we do the same for the other proteome:
-<Execute command="unzip -jo GCF_000008865.2" />
+<Execute command={"unzip -jo GCF_000008865.2"} />
 
-<Execute command="mv protein.faa ec-h7.fasta" />
+<Execute command={"mv protein.faa ec-h7.fasta"} />
 
 How many proteins are there?
-<Execute command="grep -c ">" ec*.fasta" />
+<Execute command={"grep -c ">" ec*.fasta"} />
 
 
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
-<Execute command="" />
+<Execute command={""} />
 
 As of version `2.21.0`, bedtools is able to intersect an "A" file against one or more "B" files. This greatly simplifies analyses involving multiple datasets relevant to a given experiment. For example, let's intersect exons with CpG islands, GWAS SNPs, an the ChromHMM annotations:
 
-<Execute command="bedtools intersect -a exons.bed -b cpg.bed gwas.bed hesc.chromHmm.bed -sorted | head" />
+<Execute command={"bedtools intersect -a exons.bed -b cpg.bed gwas.bed hesc.chromHmm.bed -sorted | head"} />
 
 Now by default, this isn't incredibly informative as we can't tell which of the three "B" files yielded the intersection with each exon. However, if we use the `-wa` and `wb` options, we can see from which file number (following the order of the files given on the command line) the intersection came. In this case, the 7th column reflects this file number:
 
-<Execute command={"bedtools intersect -a exons.bed -b cpg.bed gwas.bed hesc.chromHmm.bed -sorted -wa -wb \\ | head -n 10000 \\ | tail -n 10"} />
+<Execute command={{"bedtools intersect -a exons.bed -b cpg.bed gwas.bed hesc.chromHmm.bed -sorted -wa -wb \\ | head -n 10000 \\ | tail -n 10"} />
 
 Additionally, one can use file "labels" instead of file numbers to facilitate interpretation, especially when there are _many_ files involved:
 
-<Execute command={"bedtools intersect -a exons.bed -b cpg.bed gwas.bed hesc.chromHmm.bed -sorted -wa -wb -names cpg gwas chromhmm \\ | head -n 10000 \\ | tail -n 10"} />
+<Execute command={{"bedtools intersect -a exons.bed -b cpg.bed gwas.bed hesc.chromHmm.bed -sorted -wa -wb -names cpg gwas chromhmm \\ | head -n 10000 \\ | tail -n 10"} />
 
 > You should by now have learned how to analyse data
 
