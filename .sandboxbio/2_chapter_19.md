@@ -4,61 +4,27 @@ Adapted from [Chapter 19](https://link.springer.com/chapter/10.1007/978-3-031-70
 
 This project introduces two serotypes of *Escherichia coli*: one pathogenic and one non-pathogenic variety. The serotype O157:H7 emerges as a significant cause of foodborne illness, notably linked to undercooked meat since its detection in 1982. Phylogenetic analyses suggest that O157:H7 diverged from a common ancestor around 4.5 million years ago, acquiring its pathogenicity possibly through horizontal gene transfer. Can we identify proteins associated with pathogenicity among those acquired genes? To answer this question, we compare the translated, annotated genomes of one non-pathogenic and one pathogenic serotype. This project aims to uncover the presence of diﬀerent genes in different but related genomes. Central to this analysis is the Basic Local Alignment Search Tool (BLAST+) that we run locally and in the terminal. For sequence download, I introduce the rather new tool NCBI Databases.
 
-## Installation of NCBI Datasets
-First, we install the NCBI tool `datasets` to download data from NCBI. 
-
-```bash
-curl -O https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets
-```
-
-Check the content of your working directory:
-
-```bash
-ls -l
-```
-
-We must make the code executable:
-
-```bash
-chmod u+x datasets
-```
-
-Check the content of your working directory, again:
-
-```bash
-ls -l
-```
-
-What difference do you observe?
-
-
 ## Downloading Proteoms
-Let us use a `for` loop in the Bash shell:
+One after the other:
 
 ```bash
-for i in GCF_000005845.2 GCF_000008865.2; do ./datasets download genome accession $i --include protein --filename $i.zip; done
-```
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/008/865/GCF_000008865.2_ASM886v2/GCF_000008865.2_ASM886v2_protein.faa.gz```
 
 Now, we extract the compress file archive:
 
 ```bash
-unzip -jo GCF_000005845.2.zip
-```
+gunzip ./GCF_000008865.2_ASM886v2_protein.faa.gz```
 
 An then we rename the file:
 
 ```bash
-mv protein.faa ec-k12.fasta
-```
+mv ./GCF_000008865.2_ASM886v2_protein.faa ecoli_h7.fasta```
 
-Next, we do the same for the other proteome:
-
-```bash
-unzip -jo GCF_000008865.2
-```
+Next, we do the same for the other proteome, K12:
 
 ```bash
-mv protein.faa ec-h7.fasta
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_protein.faa.gzgunzip ./GCF_000005845.2_ASM584v2_protein.faa.gz
+mv ./GCF_000005845.2_ASM584v2_protein.faa ecoli_k12.fasta
 ```
 
 How many proteins are there?
@@ -124,7 +90,7 @@ awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No
 ## Playing with the E-Value
 Let us analyse the effect of the e-value setting on the result. Therefore, we need the Bash/AWK script in *autoblast.sh*:
 
-<code>
+```
 #!/bin/bash
 # save as autoblast.sh
 # loops through E-value
@@ -133,7 +99,7 @@ do
 echo "Working on h7vsk12-$i.txt"
 blastp -db ecolik12 -query ec-h7.faa -out h7vsk12-$i.txt -evalue $i
 done
-</code>
+```
 
 ```bash
 time ./autoblast.sh
