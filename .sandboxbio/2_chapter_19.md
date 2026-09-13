@@ -8,25 +8,25 @@ This project introduces two serotypes of *Escherichia coli*: one pathogenic and 
 First, we install the NCBI tool `datasets` to download data from NCBI. 
 
 ```bash
-curl -O https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets"
+curl -O https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets
 ```
 
 Check the content of your working directory:
 
 ```bash
-ls -l"
+ls -l
 ```
 
 We must make the code executable:
 
 ```bash
-chmod u+x datasets"
+chmod u+x datasets
 ```
 
 Check the content of your working directory, again:
 
 ```bash
-ls -l"
+ls -l
 ```
 
 > What difference do you observe?
@@ -36,29 +36,29 @@ ls -l"
 Let us use a `for` loop in the Bash shell:
 
 ```bash
-for i in GCF_000005845.2 GCF_000008865.2; do ./datasets download genome accession $i --include protein --filename $i.zip; done"
+for i in GCF_000005845.2 GCF_000008865.2; do ./datasets download genome accession $i --include protein --filename $i.zip; done
 ```
 
 Now, we extract the compress file archive:
 
 ```bash
-unzip -jo GCF_000005845.2.zip"
+unzip -jo GCF_000005845.2.zip
 ```
 
 An then we rename the file:
 
 ```bash
-mv protein.faa ec-k12.fasta"
+mv protein.faa ec-k12.fasta
 ```
 
 Next, we do the same for the other proteome:
 
 ```bash
-unzip -jo GCF_000008865.2"
+unzip -jo GCF_000008865.2
 ```
 
 ```bash
-mv protein.faa ec-h7.fasta"
+mv protein.faa ec-h7.fasta
 ```
 
 How many proteins are there?
