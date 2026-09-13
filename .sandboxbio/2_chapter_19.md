@@ -29,7 +29,7 @@ Check the content of your working directory, again:
 ls -l
 ```
 
-> What difference do you observe?
+What difference do you observe?
 
 
 ## Downloading Proteoms
@@ -65,4 +65,86 @@ How many proteins are there?
 
 ```bash
 grep -c ">" ec*.fasta
+```
+
+## Creating BLAST DB
+We use the NCBI BLAST+ command `makeblastdb` to create a local BLAST database:
+
+```bash
+makeblastdb -in ec-k12.fasta -dbtype prot -title "Escherichia coli K12" -out ecolik12 -parse_seqids
+```
+
+These are the database files:
+
+```bash
+ls -l ecolik12*
+```
+
+## BLASTing
+Now, we perform the BLAST query:
+
+```bash
+time blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12.txt -evalue .00001
+```
+
+The result is in file *h7vsk12.txt*:
+```bash
+ls -lh ec-* h7*
+```
+
+Let us count the number of lines:
+
+```bash
+wc -l h7vsk12.txt
+```
+
+## Processing the BLAST Result File
+Finally, we analyse the result file step-by-step:
+
+```bash
+awk '/Query=/ || /No hits/{print}' h7vsk12.txt | head -20
+```
+
+```bash
+awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | head
+```
+
+```bash
+awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | wc -l
+```
+
+```bash
+awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | egrep -v "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | head -20
+```
+
+```bash
+awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | egrep -v "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | wc -l
+```
+
+## Playing with the E-Value
+Let us analyse the effect of the e-value setting on the result. Therefore, we need the Bash/AWK script in *autoblast.sh*:
+
+<code>
+#!/bin/bash
+# save as autoblast.sh
+# loops through E-value
+for i in 1 0.001 0.00001
+do
+echo "Working on h7vsk12-$i.txt"
+blastp -db ecolik12 -query ec-h7.faa -out h7vsk12-$i.txt -evalue $i
+done
+</code>
+
+```bash
+time ./autoblast.sh
+```
+
+And analyse the result:
+
+```bash
+for i in h7vsk12-*; do echo -n $i" : "; awk '/Query=/ || /No hits/{print $0}' $i | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | wc -l; done
+```
+
+```bash
+for i in h7vsk12-*; do echo -n $i" : "; awk '/Query=/ || /No hits/{print $0}' $i | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | egrep -v "([Uu]nknown|[Pp]utative|[Hh]ypothetical)|[Uu]ncharacterized)" | wc -l; done
 ```
