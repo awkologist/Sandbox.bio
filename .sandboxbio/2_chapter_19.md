@@ -8,22 +8,25 @@ This project introduces two serotypes of *Escherichia coli*: one pathogenic and 
 One after the other:
 
 ```bash
-wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/008/865/GCF_000008865.2_ASM886v2/GCF_000008865.2_ASM886v2_protein.faa.gz```
+curl -O https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/008/865/GCF_000008865.2_ASM886v2/GCF_000008865.2_ASM886v2_protein.faa.gz
+```
 
 Now, we extract the compress file archive:
 
 ```bash
-gunzip ./GCF_000008865.2_ASM886v2_protein.faa.gz```
+gunzip ./GCF_000008865.2_ASM886v2_protein.faa.gz
+```
 
 An then we rename the file:
 
 ```bash
-mv ./GCF_000008865.2_ASM886v2_protein.faa ecoli_h7.fasta```
+mv ./GCF_000008865.2_ASM886v2_protein.faa ecoli_h7.fasta
+```
 
 Next, we do the same for the other proteome, K12:
 
 ```bash
-wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_protein.faa.gzgunzip ./GCF_000005845.2_ASM584v2_protein.faa.gz
+curl -O  https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_protein.faa.gzgunzip ./GCF_000005845.2_ASM584v2_protein.faa.gz
 mv ./GCF_000005845.2_ASM584v2_protein.faa ecoli_k12.fasta
 ```
 
