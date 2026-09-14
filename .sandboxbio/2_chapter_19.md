@@ -41,7 +41,7 @@ grep -c ">" ec*.fasta
 We use the NCBI BLAST+ command `makeblastdb` to create a local BLAST database:
 
 ```bash
-makeblastdb -in ec-k12.fasta -dbtype prot -title "Escherichia coli K12" -out ecolik12 -parse_seqids
+makeblastdb -in ec-k12.fasta -dbtype prot -title "Escherichia coli K12" -out ecolik12 -parse_seqids -blastdb_version 4 
 ```
 
 These are the database files:
