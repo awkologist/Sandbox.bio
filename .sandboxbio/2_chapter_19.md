@@ -53,7 +53,7 @@ ls -l ecolik12*
 ```
 
 ## BLASTing
-Now, we perform the BLAST query:
+Now, we perform the BLAST query. **Attention**: The query runs appr. 25 minutes.
 
 ```bash
 time blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12.txt -evalue .00001 
@@ -86,11 +86,11 @@ awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No
 ```
 
 ```bash
-awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | egrep -v "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | head -20
+awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | grep -Ev "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | head -20
 ```
 
 ```bash
-awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | egrep -v "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | wc -l
+awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | grep -Ev "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | wc -l
 ```
 
 ## Playing with the E-Value
@@ -118,5 +118,5 @@ for i in h7vsk12-*; do echo -n $i" : "; awk '/Query=/ || /No hits/{print $0}' $i
 ```
 
 ```bash
-for i in h7vsk12-*; do echo -n $i" : "; awk '/Query=/ || /No hits/{print $0}' $i | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | egrep -v "([Uu]nknown|[Pp]utative|[Hh]ypothetical)|[Uu]ncharacterized)" | wc -l; done
+for i in h7vsk12-*; do echo -n $i" : "; awk '/Query=/ || /No hits/{print $0}' $i | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | grep -Ev "([Uu]nknown|[Pp]utative|[Hh]ypothetical)|[Uu]ncharacterized)" | wc -l; done
 ```
