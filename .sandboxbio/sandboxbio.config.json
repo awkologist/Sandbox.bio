@@ -2,5 +2,5 @@
   "welcome": "Welcome to this workshop!",
   "welcomeCmd": "ls -l",
   "setup": "mkdir -p results",
-  "tools": ["samtools", "bedtools"]
+  "tools": ["samtools", "bedtools", "makeblastdb", "blastp"]
 }
