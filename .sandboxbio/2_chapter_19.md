@@ -54,8 +54,10 @@ ls -l ecolik12*
 Now, we perform the BLAST query:
 
 ```bash
-time blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12.txt -evalue .00001
+time blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12.txt -evalue .00001 -blastdb_version 4 
 ```
+
+The option `-blastdb_version 4` dictates using the older formatting structure for BLAST databases. The newer version 5 is not compatible with this Linux system.
 
 The result is in file *h7vsk12.txt*:
 ```bash
@@ -101,7 +103,7 @@ Let us analyse the effect of the e-value setting on the result. Therefore, we ne
 for i in 1 0.001 0.00001
 do
 echo "Working on h7vsk12-$i.txt"
-blastp -db ecolik12 -query ec-h7.faa -out h7vsk12-$i.txt -evalue $i
+blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12-$i.txt -evalue $i
 done
 ```
 
