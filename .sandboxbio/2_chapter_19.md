@@ -20,7 +20,7 @@ gunzip ./GCF_000008865.2_ASM886v2_protein.faa.gz
 An then we rename the file:
 
 ```bash
-mv ./GCF_000008865.2_ASM886v2_protein.faa ecoli-h7.fasta
+mv ./GCF_000008865.2_ASM886v2_protein.faa ec-h7.fasta
 ```
 
 Next, we do the same for the other proteome, K12:
@@ -28,7 +28,7 @@ Next, we do the same for the other proteome, K12:
 ```bash
 curl -O  https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_protein.faa.gz
 gunzip ./GCF_000005845.2_ASM584v2_protein.faa.gz
-mv ./GCF_000005845.2_ASM584v2_protein.faa ecoli-k12.fasta
+mv ./GCF_000005845.2_ASM584v2_protein.faa ec-k12.fasta
 ```
 
 How many proteins are there?
