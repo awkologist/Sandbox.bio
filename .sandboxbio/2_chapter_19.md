@@ -44,6 +44,8 @@ We use the NCBI BLAST+ command `makeblastdb` to create a local BLAST database:
 makeblastdb -in ec-k12.fasta -dbtype prot -title "Escherichia coli K12" -out ecolik12 -parse_seqids -blastdb_version 4 
 ```
 
+The option `-blastdb_version 4` dictates using the older formatting structure for BLAST databases. The newer version 5 is not compatible with this Linux system.
+
 These are the database files:
 
 ```bash
@@ -54,10 +56,8 @@ ls -l ecolik12*
 Now, we perform the BLAST query:
 
 ```bash
-time blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12.txt -evalue .00001 -blastdb_version 4 
+time blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12.txt -evalue .00001 
 ```
-
-The option `-blastdb_version 4` dictates using the older formatting structure for BLAST databases. The newer version 5 is not compatible with this Linux system.
 
 The result is in file *h7vsk12.txt*:
 ```bash

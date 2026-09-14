@@ -1,6 +1,6 @@
 {
   "welcome": "Welcome data juggler!",
-  "welcomeCmd": "ls -l",
+  "welcomeCmd": "pwd",
   "setup": "date > loaded.info",
   "tools": ["makeblastdb", "blastp"]
 }
