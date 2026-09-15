@@ -1,18 +1,20 @@
-# In Search of Diﬀerences in Proteomes
+# Exploring Early SARS-CoV2 Mutations
 
-Adapted from [Chapter 19](https://link.springer.com/chapter/10.1007/978-3-031-70314-0_19) of my book *Computational Biology*.
+Adapted from [Chapter 23](https://link.springer.com/chapter/10.1007/978-3-031-70314-0_23) of my book *Computational Biology*.
 
-This project introduces two serotypes of *Escherichia coli*: one pathogenic and one non-pathogenic variety. The serotype O157:H7 emerges as a significant cause of foodborne illness, notably linked to undercooked meat since its detection in 1982. Phylogenetic analyses suggest that O157:H7 diverged from a common ancestor around 4.5 million years ago, acquiring its pathogenicity possibly through horizontal gene transfer. Can we identify proteins associated with pathogenicity among those acquired genes? To answer this question, we compare the translated, annotated genomes of one non-pathogenic and one pathogenic serotype. This project aims to uncover the presence of diﬀerent genes in different but related genomes. Central to this analysis is the Basic Local Alignment Search Tool (BLAST+) that we run locally and in the terminal. For sequence download, I introduce the rather new tool NCBI Databases.
+We have tackled the SARS-CoV-2 pandemic, but the lives lost were tragic. Our project delves into using bioinformatics tools to analyze mutations in the SARS-CoV-2 genome. Employed tools include IGV, SAMtools, BCFtools, Minimap, NCBI EDirect, AWK, and Jmol. IGV aids in visually inspecting genomic data for mutation identification. SAMtools and BCFtools process sequencing data to identify mutations from alignment (SAM/BAM) and variant call format (VCF) files. Minimap aligns SARS-CoV-2 sequences to a reference genome for mutation detection. NCBI EDirect retrieves SARS-CoV-2 sequences for mutation analysis. AWK filters and manipulates mutation data. Jmol visualizes the three- dimensional structure of SARS-CoV-2 spike proteins, aiding in understanding mutation implications. Integrating these tools enables comprehensive mutation
+analyses, offering insights into viral evolution and impacts on disease strategies.
 
 ## Working Directory
 We are going to work in the following directory:
 
 ```bash
-cd /home/sandbox/github/awkologist/Proteomes
+cd /home/sandbox/github/awkologist/SARS
 ```
 
 ## Provided Programs 
-The AWK-Script *autoblast.sh* is available in the working directory.
+The AWK-Scripts *fasta2tbl* and *compare-cov2.awk* are available in the working directory.
+
 
 ## Downloading Proteoms
 One after the other:
