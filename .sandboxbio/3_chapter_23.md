@@ -25,7 +25,7 @@ chmod u+x ./fasta2tbl
 Download reference genome and save in file *wuhan-1.fasta*:
 
 ```bash
-efetch -db nuccore -id NC_045512 -format fasta > wuhan-1.fasta
+curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_045512&rettype=fasta&retmode=text" > wuhan-1.fasta
 ```
 
 Now, create a copy in tab-delimited format:
@@ -40,116 +40,158 @@ Download from [NCBI](https://www.ncbi.nlm.nih.gov/sars-cov-2/) viruses from Euro
 - without ambigious characters, 
 - complete nucleotide sequences, 
 - and a sequence length of exactly 29,903 nt. 
-Build a **custom** FASTA annotation line with
-- 
-- 
-- 
-in step 3 in the download window They are downloaded via the web browser as *sequences_timestamp.fasta*. Move them into your current working directory.
 
-Detailed instruction are in chapter "**23.2.3 Data and GitHub Repository**"
+Import the file (ca 100 MB) from your local computer to Sandbox.bio. 
 
-Move the file (ca 100 MB) from your local computer to JuypterHub. It takes a while – check in the GitHub file browser if the complete file has been uploaded.
 
-An then we rename the file:
+Rename sequences_timestamp.fasta to cov2-len-29903.fasta. You have to replace "_timestamp" with your file's name:
+
+
 
 ```bash
-mv ./GCF_000008865.2_ASM886v2_protein.faa ec-h7.fasta
+mv ./sequences_TIMESTAMP.fasta cov2-len-29903.fasta # replace timestamp
 ```
 
-Next, we do the same for the other proteome, K12:
+Count the number of sequences in the file:
 
 ```bash
-curl -O  https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_protein.faa.gz
-gunzip ./GCF_000005845.2_ASM584v2_protein.faa.gz
-mv ./GCF_000005845.2_ASM584v2_protein.faa ec-k12.fasta
+grep -c ">" cov2-len-29903.fasta
 ```
+
+## Convert FASTA to TAB and Edit Header
+
 
 How many proteins are there?
 
 ```bash
-grep -c ">" ec*.fasta
-```
-
-## Creating BLAST DB
-We use the NCBI BLAST+ command `makeblastdb` to create a local BLAST database:
-
-```bash
-makeblastdb -in ec-k12.fasta -dbtype prot -title "Escherichia coli K12" -out ecolik12 -parse_seqids -blastdb_version 4 
-```
-
-The option `-blastdb_version 4` dictates using the older formatting structure for BLAST databases. The newer version 5 is not compatible with this Linux system.
-
-These are the database files:
-
-```bash
-ls -l ecolik12*
-```
-
-## BLASTing
-Now, we perform the BLAST query. **Attention**: The query runs appr. 25 minutes.
-
-```bash
-time blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12.txt -evalue .00001 
-```
-
-The result is in file *h7vsk12.txt*:
-```bash
-ls -lh ec-* h7*
-```
-
-Let us count the number of lines:
-
-```bash
-wc -l h7vsk12.txt
-```
-
-## Processing the BLAST Result File
-Finally, we analyse the result file step-by-step:
-
-```bash
-awk '/Query=/ || /No hits/{print}' h7vsk12.txt | head -20
+head -1 cov2-len-29903.fasta
 ```
 
 ```bash
-awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | head
+./fasta2tbl cov2-len-29903.fasta | sed 's/|/\t/g' > cov2-len-29903.tab
+```
+
+Look at the first three columns:
+
+```bash
+cut -f 1-3 cov2-len-29903.tab | head -2
+```
+
+## Analyze Data
+Count the number of virus sequences from different countries in your file:
+
+```bash
+cut -f 2 cov2-len-29903.tab | sed 's/:.*//' | sort | uniq -c 
+```
+
+German virus sequences:
+
+```bash
+egrep "Germany" cov2-len-29903.tab | cut -f 1-3
+```
+
+Let's compare:
+
+```bash
+awk -f compare-cov2.awk -v ref=wuhan-1.tab -v seq=cov2-len-29903.tab -v id2=MT358638
 ```
 
 ```bash
-awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | wc -l
+for i in MT358638 MT358639 MT358640 MT358641 MT358642 MT358643; do awk -f compare-cov2.awk -v ref=wuhan-1.tab -v seq=cov2-len-29903.tab -v id2=$i; done
 ```
 
 ```bash
-awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | grep -Ev "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | head -20
+awk -f compare-cov2.awk -v ref=wuhan-1.tab -v seq=cov2-len-29903.tab -v id2=OK075090
 ```
 
 ```bash
-awk '/Query=/ || /No hits/{print $0}' h7vsk12.txt | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | grep -Ev "([Uu]nknown| [Pp]utative|[Hh]ypothetical|[Uu]ncharacterized)" | wc -l
-```
-
-## Playing with the E-Value
-Let us analyse the effect of the e-value setting on the result. Therefore, we need the Bash/AWK script in *autoblast.sh*:
-
-```
-#!/bin/bash
-# save as autoblast.sh
-# loops through E-value
-for i in 1 0.001 0.00001
-do
-echo "Working on h7vsk12-$i.txt"
-blastp -db ecolik12 -query ec-h7.fasta -out h7vsk12-$i.txt -evalue $i
-done
+egrep -c ">" result.txt
 ```
 
 ```bash
-time ./autoblast.sh
-```
-
-And analyse the result:
-
-```bash
-for i in h7vsk12-*; do echo -n $i" : "; awk '/Query=/ || /No hits/{print $0}' $i | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | wc -l; done
+egrep -c "SPIKE" result.txt
 ```
 
 ```bash
-for i in h7vsk12-*; do echo -n $i" : "; awk '/Query=/ || /No hits/{print $0}' $i | awk '{line[NR]=$0; if($0~/No hits/){print line[NR-1]}}' | grep -Ev "([Uu]nknown|[Pp]utative|[Hh]ypothetical)|[Uu]ncharacterized)" | wc -l; done
+egrep -c "Motif" result.txt
 ```
+
+```
+egrep "Motif" result.txt | head -5
+```
+
+```bash
+egrep "Motif" result.txt | cut -d ' ' -f 7 | sort | uniq -c
+echo
+egrep "Motif" result.txt | cut -d ' ' -f 7
+```
+
+## Jmol
+Copy/paste the following code into the Jmol terminal:
+
+```
+load =7DF4
+spacefill off; wireframe off
+cartoon
+select :A; color lightgray # ACE2
+select :C; color gray # Spike 2
+select :D; color darkgray # Spike 3
+select :B; color lightblue # Spike 1
+select 319-541:B; color blue # RBDomain
+select 437-508:B; color red # RBMotif
+```
+
+Now paste the Jmol code generated by the following programme:
+
+```bash
+egrep "Motif" result.txt | awk '{print $6}' | sort | uniq -c | sed 's/:/ /' | awk '{if($1<10){print "select "$3":B; spacefill 100; color yellow"}else{print "select "$3":B; spacefill 300; color yellow"}}' | tee -a 7DF4.script
+```
+
+## Mapping Genomic Variance
+
+```bash
+minimap2 -x asm5 -a -o sequences.sam wuhan-1.fasta cov2-len-29903.fasta
+```
+
+Print SAM without sequence:
+
+```bash
+awk -F"\t" '{ORS=""; for(i=1; i<=NF; i++){if($i!~/[ATCG]{10,}/){print $i" "}}print "\n"}' sequences.sam | head -10
+```
+
+The 6th field specifies the changes. "29903M" means that all 29903 nucleotides match (see table 23.1 in my book). Therefore, we print only lines with mutations:
+
+```bash
+awk -F"\t" '$6!="29903M"{ORS=""; for(i=1; i<=NF; i++){if($i!~/[ATCG]{10,}/){print $i" "}}print "\n"}' sequences.sam | head -10
+```
+
+```bash
+awk -F"\t" '$6!="29903M"{ORS=""; for(i=1; i<=NF; i++){if($i!~/[ATCG]{10,}/){print $i" "}}print "\n"}' sequences.sam | wc -l
+```
+
+And now we print the full lines, including the sequences.
+
+```bash
+awk -F"\t" '$6!="29903M"{print $0}' sequences.sam > sequences_mutated.sam
+```
+
+Convert SAM file to binary format and sort 
+
+```bash
+samtools view -b sequences_mutated.sam | samtools sort - -o sequences_mutated.sorted.bam
+```
+
+Create index for *sequences.sorted.bam* file for visualization with IGV
+
+```bash
+samtools index sequences_mutated.sorted.bam
+```
+
+We can now look at the variants with the Samtools viewer ```tview```:
+
+```bash
+samtools tview sequences_mutated.sorted.bam wuhan-1.fasta -p NC_045512.2:22871-23084
+```
+
+This opens the following screen. The top sequence represents the reference stored in *wuhan-1.fasta*. Each following line represents one virus genome sequence. A dot means that the nucleotide at this position matches the reference. For mutated nucleotides, the nucleotide is shown. You can sroll left and right with the curos keys and can apply commands as shown in the help. ```Q```brings you back to the terminal prompt.
+
