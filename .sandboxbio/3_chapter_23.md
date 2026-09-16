@@ -9,25 +9,46 @@ analyses, offering insights into viral evolution and impacts on disease strategi
 We are going to work in the following directory:
 
 ```bash
-cd /home/sandbox/github/awkologist/SARS
+cd /home/sandbox/github/awkologist/sandbox.bio/SARS
 ```
 
 ## Provided Programs 
 The AWK-Scripts *fasta2tbl* and *compare-cov2.awk* are available in the working directory.
 
-
-## Downloading Proteoms
-One after the other:
+Make *fasta2tbl* executable:
 
 ```bash
-curl -O https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/008/865/GCF_000008865.2_ASM886v2/GCF_000008865.2_ASM886v2_protein.faa.gz
+chmod u+x ./fasta2tbl
 ```
 
-Now, we extract the compress file archive:
+## Download Virus Reference Sequences
+Download reference genome and save in file *wuhan-1.fasta*:
 
 ```bash
-gunzip ./GCF_000008865.2_ASM886v2_protein.faa.gz
+efetch -db nuccore -id NC_045512 -format fasta > wuhan-1.fasta
 ```
+
+Now, create a copy in tab-delimited format:
+
+```bash
+./fasta2tbl wuhan-1.fasta > wuhan-1.tab
+```
+
+## Download other Virus Sequences from NCBI
+Download from [NCBI](https://www.ncbi.nlm.nih.gov/sars-cov-2/) viruses from Europe, 
+- from human hosts, 
+- without ambigious characters, 
+- complete nucleotide sequences, 
+- and a sequence length of exactly 29,903 nt. 
+Build a **custom** FASTA annotation line with
+- 
+- 
+- 
+in step 3 in the download window They are downloaded via the web browser as *sequences_timestamp.fasta*. Move them into your current working directory.
+
+Detailed instruction are in chapter "**23.2.3 Data and GitHub Repository**"
+
+Move the file (ca 100 MB) from your local computer to JuypterHub. It takes a while – check in the GitHub file browser if the complete file has been uploaded.
 
 An then we rename the file:
 

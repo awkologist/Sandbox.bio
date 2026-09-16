@@ -8,7 +8,7 @@ This project introduces two serotypes of *Escherichia coli*: one pathogenic and 
 We are going to work in the following directory:
 
 ```bash
-cd /home/sandbox/github/awkologist/Proteomes
+cd /home/sandbox/github/awkologist/sandbox.bio/Proteomes
 ```
 
 ## Provided Programs 
