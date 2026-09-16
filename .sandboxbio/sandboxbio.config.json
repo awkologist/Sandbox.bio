@@ -1,8 +1,6 @@
 {
   "welcome": "Welcome Data Juggler!",
   "welcomeCmd": "pwd",
-  "setup": "date > loaded.info",
-  "setup": "mkdir Proteomes; cp autoblast.sh Proteomes/",
-  "setup": "mkdir SARS; cp fasta2tbl SARS/; cp compare-cov2.awk SARS/", 
+  "setup": "date > loaded.info; mkdir Proteomes; cp autoblast.sh Proteomes/; mkdir SARS; cp fasta2tbl SARS/; cp compare-cov2.awk SARS/",
   "tools": ["makeblastdb", "blastp"]
 }
